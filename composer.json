@@ -2,7 +2,7 @@
     "name": "finntenzor/think-report",
     "description": "A simple reporter for ThinkPHP v5.1",
     "type": "library",
-    "license": "Apache License 2.0",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "finntenzor",
@@ -11,7 +11,7 @@
     ],
     "autoload": {
       "psr-4": {
-        "finntenzor\\report": "src"
+        "finntenzor\\report\\": "src"
       }
     },
     "require": {}
