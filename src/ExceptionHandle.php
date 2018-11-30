@@ -28,16 +28,16 @@ class ExceptionHandle extends Handle
 
     public function render(\Exception $e)
     {
-        if (Container::get('app')->isDebug()) {
-            return json([
-                'ret' => 500,
-                'msg' => 'Internal Server Error'
-            ]);
+        $app = Container::get('app');
+        if ($app->bound(ResponseBuilder::class)) {
+            $builder = $app->get(ResponseBuilder::class);
         } else {
-            return json([
-                'ret' => 500,
-                'msg' => $e->getMessage()
-            ]);
+            $builder = new DefaultResponseBuilder();
+        }
+        if (Container::get('app')->isDebug()) {
+            return $builder->debugResponse($e);
+        } else {
+            return $builder->deployResponse($e);
         }
     }
 
