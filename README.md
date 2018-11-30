@@ -7,7 +7,7 @@ A simple reporter for ThinkPHP v5.1
 ## 如何使用
 
 ### 使用异常处理
-在你的ThinkPHP项目中，找到config/app.php。在大概最后一行的位置找到“exception_handle”配置，将它修改为“\\finntenzor\\report\\ExceptionHandle”，如：
+在你的ThinkPHP项目中，找到config/app.php。在大概最后一行的位置找到“exception_handle”配置，将它修改为“\\\\finntenzor\\\\report\\\\ExceptionHandle”，如：
 ``` php
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '\\finntenzor\\report\\ExceptionHandle',
@@ -56,72 +56,72 @@ Route::group('app', function () {
 错误报告工具启动后，默认会保存所有的错误报告到项目目录/runtime/reports下，但是仅进行保存而不会将错误返回给用户显示，给用户/前端的将会是一段默认的json，格式如下：
 
 + 项目关闭debug模式时
-``` json
-{
-  "ret": 500,
-  "msg": "Internal Server Error"
-}
-```
+  ``` json
+  {
+    "ret": 500,
+    "msg": "Internal Server Error"
+  }
+  ```
 
 + 项目打开debug模式时
-``` json
-{
-  "ret": 500,
-  "msg": "错误Message"
-}
-```
+  ``` json
+  {
+    "ret": 500,
+    "msg": "错误Message"
+  }
+  ```
 
 如果你需要修改为其他格式，你可以利用ThinkPHP的容器绑定来修改格式：
 
 1. 首先你需要创建一个类实现ResponseBuilder，例如：
-``` php
-<?php
-namespace app\index\common;
+  ``` php
+  <?php
+  namespace app\index\common;
 
-use finntenzor\report\ResponseBuilder;
+  use finntenzor\report\ResponseBuilder;
 
-class ExceptionResponseBuilder implements ResponseBuilder
-{
+  class ExceptionResponseBuilder implements ResponseBuilder
+  {
 
-    /**
-     * @param \Exception $e 异常
-     * @return mixed 响应
-     */
-    public function debugResponse($e)
-    {
-        return $e->getMessage();
-    }
+      /**
+      * @param \Exception $e 异常
+      * @return mixed 响应
+      */
+      public function debugResponse($e)
+      {
+          return $e->getMessage();
+      }
 
-    /**
-     * @return mixed 响应
-     */
-    public function deployResponse()
-    {
-        return '哦吼，页面错误了，请联系管理员哦~';
-    }
-}
+      /**
+      * @return mixed 响应
+      */
+      public function deployResponse()
+      {
+          return '哦吼，页面错误了，请联系管理员哦~';
+      }
+  }
 
-```
+  ```
 
 2. 在你的ThinkPHP项目中找到application/provider.php，在其中将ResponseBuilder接口绑定到你自己的实现上：
-``` php
-<?php
-// +----------------------------------------------------------------------
-// | ThinkPHP [ WE CAN DO IT JUST THINK ]
-// +----------------------------------------------------------------------
-// | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
-// +----------------------------------------------------------------------
-// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-// +----------------------------------------------------------------------
-// | Author: liu21st <liu21st@gmail.com>
-// +----------------------------------------------------------------------
+  ``` php
+  <?php
+  // +----------------------------------------------------------------------
+  // | ThinkPHP [ WE CAN DO IT JUST THINK ]
+  // +----------------------------------------------------------------------
+  // | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
+  // +----------------------------------------------------------------------
+  // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+  // +----------------------------------------------------------------------
+  // | Author: liu21st <liu21st@gmail.com>
+  // +----------------------------------------------------------------------
 
-// 应用容器绑定定义
-return [
-    // 将工具的ResponseBuilder接口绑定到自定义的Builder类上
-    \finntenzor\report\ResponseBuilder::class => \app\index\common\ExceptionResponseBuilder::class
-];
+  // 应用容器绑定定义
+  return [
+      // 将工具的ResponseBuilder接口绑定到自定义的Builder类上
+      \finntenzor\report\ResponseBuilder::class => \app\index\common\ExceptionResponseBuilder::class
+  ];
 
-// 或者你也可以使用命令式的绑定：
-bind(\finntenzor\report\ResponseBuilder::class, \app\index\common\ExceptionResponseBuilder::class)
-```
+  // 或者你也可以使用命令式的绑定：
+  bind(\finntenzor\report\ResponseBuilder::class, \app\index\common\ExceptionResponseBuilder::class)
+  ```
