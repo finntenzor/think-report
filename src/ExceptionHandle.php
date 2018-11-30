@@ -4,6 +4,7 @@ namespace finntenzor\report;
 use think\exception\Handle;
 use Exception;
 use think\Container;
+use think\facade\Response;
 
 /**
  * 异常处理类
@@ -35,10 +36,14 @@ class ExceptionHandle extends Handle
             $builder = new DefaultResponseBuilder();
         }
         if (Container::get('app')->isDebug()) {
-            return $builder->debugResponse($e);
+            $result = $builder->debugResponse($e);
         } else {
-            return $builder->deployResponse($e);
+            $result = $builder->deployResponse($e);
         }
+        if (!$result instanceof \think\Response) {
+            $result = Response::create($result, 'html');
+        }
+        return $result;
     }
 
     protected function getData(Exception $exception)
@@ -80,7 +85,7 @@ class ExceptionHandle extends Handle
     {
         ob_start();
         extract($data);
-        include 'report_template.php';
+        include 'templates/report.php';
         // 获取并清空缓存
         $content  = ob_get_clean();
         return $content;
