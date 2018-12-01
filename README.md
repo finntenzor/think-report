@@ -73,55 +73,55 @@ Route::group('app', function () {
 
 如果你需要修改为其他格式，你可以利用ThinkPHP的容器绑定来修改格式：
 
-1. 首先你需要创建一个类实现ResponseBuilder，例如：
-  ``` php
-  <?php
-  namespace app\index\common;
+  1. 首先你需要创建一个类实现ResponseBuilder，例如：
+    ``` php
+    <?php
+    namespace app\index\common;
 
-  use finntenzor\report\ResponseBuilder;
+    use finntenzor\report\ResponseBuilder;
 
-  class ExceptionResponseBuilder implements ResponseBuilder
-  {
+    class ExceptionResponseBuilder implements ResponseBuilder
+    {
 
-      /**
-      * @param \Exception $e 异常
-      * @return mixed 响应
-      */
-      public function debugResponse($e)
-      {
-          return $e->getMessage();
-      }
+        /**
+        * @param \Exception $e 异常
+        * @return mixed 响应
+        */
+        public function debugResponse($e)
+        {
+            return $e->getMessage();
+        }
 
-      /**
-      * @return mixed 响应
-      */
-      public function deployResponse()
-      {
-          return '哦吼，页面错误了，请联系管理员哦~';
-      }
-  }
+        /**
+        * @return mixed 响应
+        */
+        public function deployResponse()
+        {
+            return '哦吼，页面错误了，请联系管理员哦~';
+        }
+    }
+    ```
 
-  ```
+  2. 在你的ThinkPHP项目中找到application/provider.php，在其中将ResponseBuilder接口绑定到你自己的实现上：
+    ``` php
+    <?php
+    // ....
 
-2. 在你的ThinkPHP项目中找到application/provider.php，在其中将ResponseBuilder接口绑定到你自己的实现上：
-  ``` php
-  <?php
-  // +----------------------------------------------------------------------
-  // | ThinkPHP [ WE CAN DO IT JUST THINK ]
-  // +----------------------------------------------------------------------
-  // | Copyright (c) 2006~2018 http://thinkphp.cn All rights reserved.
-  // +----------------------------------------------------------------------
-  // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
-  // +----------------------------------------------------------------------
-  // | Author: liu21st <liu21st@gmail.com>
-  // +----------------------------------------------------------------------
+    // 应用容器绑定定义
+    return [
+        // 将工具的ResponseBuilder接口绑定到自定义的Builder类上
+        \finntenzor\report\ResponseBuilder::class => \app\index\common\ExceptionResponseBuilder::class
+    ];
 
-  // 应用容器绑定定义
-  return [
-      // 将工具的ResponseBuilder接口绑定到自定义的Builder类上
-      \finntenzor\report\ResponseBuilder::class => \app\index\common\ExceptionResponseBuilder::class
-  ];
+    // 或者你也可以使用命令式的绑定：
+    bind(\finntenzor\report\ResponseBuilder::class, \app\index\common\ExceptionResponseBuilder::class)
+    ```
 
-  // 或者你也可以使用命令式的绑定：
-  bind(\finntenzor\report\ResponseBuilder::class, \app\index\common\ExceptionResponseBuilder::class)
-  ```
+### 添加异常忽略类型
+ThinkPHP默认忽略了“\\think\\exception\\HttpException”类型的异常，在此工具中，如果需要忽略更多类型的异常，则可以使用如下代码修改：
+``` php
+use finntenzor\report\ExceptionHandle;
+
+ExceptionHandle::ignore('\\app\\index\\MyException');
+```
+这段代码需要放在初始化阶段加载的php文件中，例如/application/common.php

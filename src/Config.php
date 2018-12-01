@@ -3,9 +3,12 @@ namespace finntenzor\report;
 
 use think\facade\Env;
 
+// TODO 将此类改为可以配置项
+
 /**
+ * Config
  * 异常报告的耦合配置
- * @author 董江彬 <dongjiangbin@tiaozhan.com>
+ * @author FinnTenzor <finntenzor@tiaozhan.com>
  */
 class Config
 {

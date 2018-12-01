@@ -2,7 +2,9 @@
 namespace finntenzor\report;
 
 /**
+ * ExceptionReporter
  * 错误报告类
+ * 通过此类来显示某一份错误报告或者返回错误报告列表
  * @author 董江彬 <dongjiangbin@tiaozhan.com>
  */
 class ExceptionReporter
@@ -25,6 +27,11 @@ class ExceptionReporter
             }
             $detailList[] = Config::fileNameToDetails($fileName);
         }
+        // 按时间排序
+        usort($detailList, function ($a, $b) {
+            // 降序排列，时间戳较大的靠上显示
+            return $b['time'] - $a['time'];
+        });
         // 关闭目录
         closedir($handler);
         // 返回详情

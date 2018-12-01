@@ -8,12 +8,35 @@ use think\facade\Response;
 
 /**
  * 异常处理类
- * @author 董江彬 <dongjiangbin@tiaozhan.com>
+ * @author FinnTenzor <finntenzor@tiaozhan.com>
  */
 class ExceptionHandle extends Handle
 {
+    /**
+     * 要忽略的错误类型
+     * @var array
+     */
+    protected static $ignores = [];
+
+    /**
+     * 忽略某个错误类型
+     * @param string $classPath 类名/路径
+     */
+    public static function ignore($classPath)
+    {
+        static::$ignores[] = $classPath;
+    }
+
+    /**
+     * 接管后的错误报告，将原错误渲染并保存。
+     *
+     * @access public
+     * @param  \Exception $exception
+     * @return void
+     */
     public function report(Exception $exception)
     {
+        $this->ignoreReport = array_merge($this->ignoreReport, static::$ignores);
         // 忽略一些异常
         if ($this->isIgnoreReport($exception)) {
             return;
@@ -27,25 +50,40 @@ class ExceptionHandle extends Handle
         file_put_contents($filePath, $content);
     }
 
+    /**
+     * 返回给用户的错误报告，由ResponseBuilder决定
+     *
+     * @access public
+     * @param  \Exception $e
+     * @return Response
+     */
     public function render(\Exception $e)
     {
+        // 获取builder
         $app = Container::get('app');
         if ($app->bound(ResponseBuilder::class)) {
             $builder = $app->get(ResponseBuilder::class);
         } else {
             $builder = new DefaultResponseBuilder();
         }
+        // 根据debug构建合适的响应
         if (Container::get('app')->isDebug()) {
             $result = $builder->debugResponse($e);
         } else {
             $result = $builder->deployResponse($e);
         }
+        // 如果是非响应类，则自动封装为html响应
         if (!$result instanceof \think\Response) {
             $result = Response::create($result, 'html');
         }
         return $result;
     }
 
+    /**
+     * 收集错误数据
+     * @param Exception $exception
+     * @return array
+     */
     protected function getData(Exception $exception)
     {
         //保留一层
@@ -78,6 +116,7 @@ class ExceptionHandle extends Handle
     }
 
     /**
+     * 将data转换为渲染页面
      * @param array $data 异常信息
      * @return string 渲染后的页面
      */

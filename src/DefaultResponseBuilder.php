@@ -1,10 +1,16 @@
 <?php
 namespace finntenzor\report;
 
+/**
+ * DefaultResponseBuilder
+ * 用于控制默认返回给用户的结果
+ * @author FinnTenzor <finntenzor@tiaozhan.com>
+ */
 class DefaultResponseBuilder implements ResponseBuilder
 {
     /**
-     * @param Exception $e 异常
+     * debug模式下返回响应
+     * @param \Exception $e 异常
      * @return mixed 响应
      */
     public function debugResponse($e)
@@ -16,6 +22,7 @@ class DefaultResponseBuilder implements ResponseBuilder
     }
 
     /**
+     * 非debug模式下返回响应
      * @return mixed 响应
      */
     public function deployResponse()
