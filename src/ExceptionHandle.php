@@ -8,7 +8,7 @@ use think\facade\Response;
 
 /**
  * 异常处理类
- * @author FinnTenzor <finntenzor@tiaozhan.com>
+ * @author FinnTenzor <finntenzor@gmail.com>
  */
 class ExceptionHandle extends Handle
 {

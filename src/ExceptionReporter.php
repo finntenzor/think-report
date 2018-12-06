@@ -5,7 +5,7 @@ namespace finntenzor\report;
  * ExceptionReporter
  * 错误报告类
  * 通过此类来显示某一份错误报告或者返回错误报告列表
- * @author 董江彬 <dongjiangbin@tiaozhan.com>
+ * @author 董江彬 <finntenzor@gmail.com>
  */
 class ExceptionReporter
 {

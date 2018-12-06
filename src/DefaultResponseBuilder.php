@@ -4,7 +4,7 @@ namespace finntenzor\report;
 /**
  * DefaultResponseBuilder
  * 用于控制默认返回给用户的结果
- * @author FinnTenzor <finntenzor@tiaozhan.com>
+ * @author FinnTenzor <finntenzor@gmail.com>
  */
 class DefaultResponseBuilder implements ResponseBuilder
 {

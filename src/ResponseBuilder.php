@@ -4,7 +4,7 @@ namespace finntenzor\report;
 /**
  * ResponseBuilder
  * 该接口包含两个方法，分别用于debug模式和非debug模式时如何返回给用户响应。
- * @author FinnTenzor <finntenzor@tiaozhan.com>
+ * @author FinnTenzor <finntenzor@gmail.com>
  */
 interface ResponseBuilder
 {

@@ -8,7 +8,7 @@ use think\facade\Env;
 /**
  * Config
  * 异常报告的耦合配置
- * @author FinnTenzor <finntenzor@tiaozhan.com>
+ * @author FinnTenzor <finntenzor@gmail.com>
  */
 class Config
 {
